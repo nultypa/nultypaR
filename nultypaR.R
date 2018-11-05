@@ -35,3 +35,31 @@ gitDF[gitDF$full_name == "jtleek/datasharing", "created_at"]
 # The above code was taken from Michael Galarnyk's webpage at:
 # https://towardsdatascience.com/accessing-data-from-github-api-using-r-3633fb62cb08
 
+# To view the data within my Github account, I must call the datat frame called 'myData'. 
+# This includes public information about my account such as the repositories, acounts I follow
+# and ones that follow me.
+myData = fromJSON("https://api.github.com/users/nultypa")
+
+# By using the $ sign we can view the different parts
+myData$public_repos # Number of repositories
+myData$followers # Number of users that follow me
+myData$following # Number of users I follow
+
+#The following data relates to repositories that I have created.
+
+myRepositories = fromJSON("https://api.github.com/users/nultypa/repos")
+myRepositories$name # The names of the repositories that I have created
+myRepositories$created_at # The time and date that they were created
+
+#The following relates to my followers
+
+myFollowers = fromJSON("https://api.github.com/users/nultypa/followers")
+myFollowers$login # Usernames of users following me on Github
+myFollowers$id    # Identification number of my follower 
+
+# The following relates to users I follow
+
+myFollows = fromJSON("https://api.github.com/users/nultypa/following")
+myFollows$login # Usernames of users I follow on Github
+myFollows$id    # Identification number of users I'm following
+
