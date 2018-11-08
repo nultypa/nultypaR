@@ -63,3 +63,13 @@ myFollows = fromJSON("https://api.github.com/users/nultypa/following")
 myFollows$login # Usernames of users I follow on Github
 myFollows$id    # Identification number of users I'm following
 
+#Viewing my classmates information ohalloa2
+ohalloa2 = fromJSON("https://api.github.com/users/ohalloa2")
+ohalloa2$login
+
+#Showing all of her general information
+AOH = toJSON(ohalloa2, pretty = TRUE)
+AOH
+
+asRepositories = fromJSON("https://api.github.com/users/ohalloa2/repos")
+asRepositories$name   #Listing out the names of the repositories she has
