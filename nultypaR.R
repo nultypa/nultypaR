@@ -157,5 +157,12 @@ plot1 = plot_ly(data = usersDB, x = ~repos, y = ~followers,
 plot1
 
 api_create(plot1, filename = "Followers vs Repositories")
+#URL: https://plot.ly/~nultypa/3
 
 
+plot2 = plot_ly(data = usersDB, x = ~followers, y = ~following, 
+                text = ~paste("Followers: ", followers, "<br>Following: ", 
+                              following, "<br>Date Created:", dateCreated), color = ~dateCreated)
+
+api_create(plot2, filename = "Following vs Followers")
+#https://plot.ly/~nultypa/5
