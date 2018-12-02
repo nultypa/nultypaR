@@ -148,14 +148,14 @@ for(i in 1:length(user_ids))
   next
 }
 
+Sys.setenv("plotly_username"="nultypa")
+Sys.setenv("plotly_api_key"="RPtT79W4N9v5t77VyWcI")
 
 plot1 = plot_ly(data = usersDB, x = ~repos, y = ~followers, 
                 text = ~paste("Followers: ", followers, "<br>Repositories: ", 
                               repos, "<br>Date Created:", dateCreated), color = ~dateCreated)
 plot1
 
-Sys.setenv("plotly_username"="nultypa")
-Sys.setenv("plotly_api_key"="RPtT79W4N9v5t77VyWcI")
 api_create(plot1, filename = "Followers vs Repositories")
 
 
