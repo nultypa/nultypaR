@@ -73,3 +73,74 @@ AOH
 
 asRepositories = fromJSON("https://api.github.com/users/ohalloa2/repos")
 asRepositories$name   #Listing out the names of the repositories she has
+
+
+##########################################################################
+#Git vizulization
+
+# I used the git account of Andrew Nesbit who currently is the second most active member of 
+# github. As he is a much more active user than myself, I thought that his information would be
+# be of more intrest.
+
+andrewData = GET("https://api.github.com/users/andrew/followers?per_page=50;", gtoken)
+stop_for_status(andrewData)
+extract = content(andrewData)
+
+githubDB = jsonlite::fromJSON(jsonlite::toJSON(extract))
+githubDB$login
+id = githubDB$login
+user_ids = c(id)
+
+users = c()
+usersDB = data.frame(
+  username = integer(),
+  following = integer(),
+  followers = integer(),
+  repos = integer(),
+  dateCreated = integer()
+)
+
+#For loop to collect all the users 
+for(i in 1:length(user_ids))
+{
+  followingURL = paste("https://api.github.com/users/", user_ids[i], "/following", sep = "")
+  followingRequest = GET(followingURL, gtoken)
+  followingContent = content(followingRequest)
+  
+  if(length(followingContent) == 0)
+  {
+    next
+  }
+  
+  followingDF = jsonlite::fromJSON(jsonlite::toJSON(followingContent))
+  followingLogin = followingDF$login
+  
+  for (j in 1:length(followingLogin))
+  {
+    if (is.element(followingLogin[j], users) == FALSE)
+    {
+      users[length(users) + 1] = followingLogin[j]
+      followingUrl2 = paste("https://api.github.com/users/", followingLogin[j], sep = "")
+      following2 = GET(followingUrl2, gtoken)
+      followingContent2 = content(following2)
+      followingDF2 = jsonlite::fromJSON(jsonlite::toJSON(followingContent2))
+      
+      
+      followingNumber = followingDF2$following
+      followersNumber = followingDF2$followers
+      reposNumber = followingDF2$public_repos
+      yearCreated = substr(followingDF2$created_at, start = 1, stop = 4)
+      
+      #Puts users data to a new row in dataframe
+      usersDB[nrow(usersDB) + 1, ] = c(followingLogin[j], followingNumber, followersNumber, reposNumber, yearCreated)
+    }
+    next
+  }
+  
+  #Max is 400 users 
+  if(length(users) > 400)
+  {
+    break
+  }
+  next
+}
