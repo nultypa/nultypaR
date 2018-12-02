@@ -87,10 +87,15 @@ asRepositories$name   #Listing out the names of the repositories she has
 
 andrewData = GET("https://api.github.com/users/andrew/followers?per_page=50;", gtoken)
 stop_for_status(andrewData)
+
+#Extract Andrew Nesbits information from Git
 extract = content(andrewData)
 
+#Convert infromation into a dataframe
 githubDB = jsonlite::fromJSON(jsonlite::toJSON(extract))
 githubDB$login
+
+#Gather list of usernames on his account 
 id = githubDB$login
 user_ids = c(id)
 
@@ -106,6 +111,7 @@ usersDB = data.frame(
 #For loop to collect all the users 
 for(i in 1:length(user_ids))
 {
+  
   followingURL = paste("https://api.github.com/users/", user_ids[i], "/following", sep = "")
   followingRequest = GET(followingURL, gtoken)
   followingContent = content(followingRequest)
@@ -118,20 +124,28 @@ for(i in 1:length(user_ids))
   followingDF = jsonlite::fromJSON(jsonlite::toJSON(followingContent))
   followingLogin = followingDF$login
   
+  #For loopthrough Andrew Nesbits followers
   for (j in 1:length(followingLogin))
   {
+    #Check if the user is already part of the list
     if (is.element(followingLogin[j], users) == FALSE)
     {
+      #Adding the user to the list
       users[length(users) + 1] = followingLogin[j]
+      
+      #Retrive information about the user
       followingUrl2 = paste("https://api.github.com/users/", followingLogin[j], sep = "")
       following2 = GET(followingUrl2, gtoken)
       followingContent2 = content(following2)
       followingDF2 = jsonlite::fromJSON(jsonlite::toJSON(followingContent2))
       
-      
+      #Number of users hes following
       followingNumber = followingDF2$following
+      #Number of users following him
       followersNumber = followingDF2$followers
+      #Number of repositories
       reposNumber = followingDF2$public_repos
+      #Year in which the repositorie was created
       yearCreated = substr(followingDF2$created_at, start = 1, stop = 4)
       
       #Puts users data to a new row in dataframe
@@ -148,6 +162,7 @@ for(i in 1:length(user_ids))
   next
 }
 
+#Linking R to plotly
 Sys.setenv("plotly_username"="nultypa")
 Sys.setenv("plotly_api_key"="RPtT79W4N9v5t77VyWcI")
 
@@ -166,3 +181,6 @@ plot2 = plot_ly(data = usersDB, x = ~followers, y = ~following,
 
 api_create(plot2, filename = "Following vs Followers")
 #https://plot.ly/~nultypa/5
+
+
+
