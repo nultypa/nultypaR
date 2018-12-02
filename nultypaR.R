@@ -5,6 +5,10 @@ library(httpuv)
 #install.packages("httr")
 library(httr)
 
+require(devtools)
+library(plotly)
+
+
 # Can be github, linkedin etc depending on application
 oauth_endpoints("github")
 
@@ -58,7 +62,6 @@ myFollowers$login # Usernames of users following me on Github
 myFollowers$id    # Identification number of my follower 
 
 # The following relates to users I follow
-
 myFollows = fromJSON("https://api.github.com/users/nultypa/following")
 myFollows$login # Usernames of users I follow on Github
 myFollows$id    # Identification number of users I'm following
@@ -144,3 +147,9 @@ for(i in 1:length(user_ids))
   }
   next
 }
+
+
+Sys.setenv("plotly_username"="nultypa")
+Sys.setenv("plotly_api_key"="RPtT79W4N9v5t77VyWcI")
+
+
