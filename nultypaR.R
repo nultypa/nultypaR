@@ -4,7 +4,6 @@ library(jsonlite)
 library(httpuv)
 #install.packages("httr")
 library(httr)
-
 require(devtools)
 library(plotly)
 
